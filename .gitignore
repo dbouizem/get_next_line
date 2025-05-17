@@ -1,0 +1,10 @@
+*.o
+
+.vscode/
+
+*~
+*.swp
+
+.DS_Store
+
+.idea/
