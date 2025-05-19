@@ -1,10 +1,8 @@
 *.o
 
-.vscode/
-
 *~
-*.swp
+*.swpi
 
+.vscode/
 .DS_Store
-
 .idea/
