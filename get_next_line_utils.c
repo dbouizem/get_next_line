@@ -6,7 +6,7 @@
 /*   By: dbouizem <djihane.bouizem@gmail.com>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/17 14:50:22 by dbouizem          #+#    #+#             */
-/*   Updated: 2025/05/29 03:29:23 by dbouizem         ###   ########.fr       */
+/*   Updated: 2025/05/29 20:53:20 by dbouizem         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -55,31 +55,31 @@ size_t	ft_strlcpy(char *dst, const char *src, size_t dstsize)
 	return (src_len);
 }
 
-char	*ft_strjoin(char *s1, char *s2)
+char	*ft_strjoin_free(char *s1, char *s2)
 {
-	char	*result;
+	char	*new_str;
+	size_t	total_len;
 	size_t	i;
 	size_t	j;
 
 	if (!s1)
-	{
-		s1 = malloc(1);
-		s1[0] = '\0';
-	}
+		s1 = ft_strdup("");
 	if (!s1 || !s2)
-		return (NULL);
-	result = malloc(ft_strlen(s1) + ft_strlen(s2) + 1);
-	if (!result)
-		return (NULL);
-	i = -1;
-	while (s1[++i])
-		result[i] = s1[i];
-	j = -1;
-	while (s2[++j])
-		result[i + j] = s2[j];
-	result[i + j] = '\0';
+		return (free(s1), NULL);
+	total_len = ft_strlen(s1) + ft_strlen(s2);
+	new_str = malloc(total_len + 1);
+	if (!new_str)
+		return (free(s1), NULL);
+	i = 0;
+	j = 0;
+	while (s1[i])
+		new_str[j++] = s1[i++];
+	i = 0;
+	while (s2[i])
+		new_str[j++] = s2[i++];
+	new_str[j] = '\0';
 	free(s1);
-	return (result);
+	return (new_str);
 }
 
 char	*ft_strdup(const char *s)
