@@ -2,7 +2,7 @@
 
 **get\_next\_line** est une fonction permettant de lire un fichier ou une entrée ligne par ligne, quelle que soit la taille de la ligne ou du buffer, dans le cadre du cursus 42.
 
----
+
 
 ## Table des matières
 
