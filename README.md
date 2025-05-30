@@ -2,7 +2,7 @@
 
 **get\_next\_line** est une fonction permettant de lire un fichier ou une entrée ligne par ligne, quelle que soit la taille de la ligne ou du buffer, dans le cadre du cursus 42.
 
-
+---
 
 ## Table des matières
 
@@ -186,8 +186,7 @@ Libère la mémoire du buffer "stock" et sécurise le pointeur pour éviter les 
 
 ## Schéma global (mindmap)
 
-![Organigramme mindmap get\_next\_line](![image](https://github.com/user-attachments/assets/d7a583ea-304a-41f5-aaf7-93df942a57f9)
-)
+![Organigramme mindmap get\_next\_line](https://github.com/user-attachments/assets/93f76eda-ef78-44c5-aaf9-a5f888c56a43)
 
 ---
 
