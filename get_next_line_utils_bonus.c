@@ -6,7 +6,7 @@
 /*   By: dbouizem <djihane.bouizem@gmail.com>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/30 03:11:20 by dbouizem          #+#    #+#             */
-/*   Updated: 2025/06/01 03:07:41 by dbouizem         ###   ########.fr       */
+/*   Updated: 2025/06/02 21:54:28 by dbouizem         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -35,24 +35,6 @@ char	*ft_strchr(const char *s, int c)
 	if (c == '\0')
 		return ((char *)s);
 	return (NULL);
-}
-
-size_t	ft_strlcpy(char *dst, const char *src, size_t dstsize)
-{
-	size_t	i;
-	size_t	src_len;
-
-	i = 0;
-	src_len = ft_strlen(src);
-	if (dstsize == 0)
-		return (src_len);
-	while (src[i] && i + 1 < dstsize)
-	{
-		dst[i] = src[i];
-		i++;
-	}
-	dst[i] = '\0';
-	return (src_len);
 }
 
 char	*ft_strjoin_free(char *s1, char *s2)
@@ -85,14 +67,47 @@ char	*ft_strjoin_free(char *s1, char *s2)
 char	*ft_strdup(const char *s)
 {
 	size_t	len;
+	size_t	i;
 	char	*dup;
 
 	if (!s)
 		return (NULL);
-	len = ft_strlen(s);
+	len = 0;
+	while (s[len])
+		len++;
 	dup = malloc(len + 1);
 	if (!dup)
 		return (NULL);
-	ft_strlcpy(dup, s, len + 1);
+	i = 0;
+	while (i < len)
+	{
+		dup[i] = s[i];
+		i++;
+	}
+	dup[i] = '\0';
 	return (dup);
+}
+
+void	remove_fdnode(t_fdlist **lst, int fd)
+{
+	t_fdlist	*curr;
+	t_fdlist	*prev;
+
+	curr = *lst;
+	prev = NULL;
+	while (curr)
+	{
+		if (curr->fd == fd)
+		{
+			if (prev)
+				prev->next = curr->next;
+			else
+				*lst = curr->next;
+			free(curr->stock);
+			free(curr);
+			return ;
+		}
+		prev = curr;
+		curr = curr->next;
+	}
 }

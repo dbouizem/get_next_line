@@ -6,7 +6,7 @@
 /*   By: dbouizem <djihane.bouizem@gmail.com>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/30 03:11:12 by dbouizem          #+#    #+#             */
-/*   Updated: 2025/06/02 19:00:48 by dbouizem         ###   ########.fr       */
+/*   Updated: 2025/06/02 21:54:20 by dbouizem         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,46 +15,36 @@
 static char	*read_file(int fd, char *stock)
 {
 	char	*buff;
-	ssize_t	bytes_read;
+	ssize_t	br;
 
 	if (stock && ft_strchr(stock, '\n'))
 		return (stock);
 	if (!stock)
 		stock = ft_strdup("");
-	buff = malloc((size_t)BUFFER_SIZE + 1);
+	buff = malloc(BUFFER_SIZE + 1);
 	if (!buff)
+		return (free(stock), NULL);
+	br = 1;
+	while (br > 0 && !ft_strchr(stock, '\n'))
 	{
-		free(stock);
-		return (NULL);
-	}
-	bytes_read = 1;
-	while (bytes_read > 0)
-	{
-		bytes_read = read(fd, buff, BUFFER_SIZE);
-		if (bytes_read < 0)
+		br = read(fd, buff, BUFFER_SIZE);
+		if (br < 0)
 			break ;
-		buff[bytes_read] = '\0';
+		buff[br] = 0;
 		stock = ft_strjoin_free(stock, buff);
 		if (!stock)
-		{
-			free(buff);
-			return (NULL);
-		}
-		if (ft_strchr(buff, '\n'))
 			break ;
 	}
 	free(buff);
-	if (bytes_read < 0)
-	{
-		free(stock);
-		return (NULL);
-	}
+	if (br < 0 || !stock)
+		return (free(stock), NULL);
 	return (stock);
 }
 
 static char	*ft_line(char *stock)
 {
 	size_t	len;
+	size_t	i;
 	char	*line;
 
 	if (!stock || !*stock)
@@ -67,7 +57,13 @@ static char	*ft_line(char *stock)
 	line = malloc(len + 1);
 	if (!line)
 		return (NULL);
-	ft_strlcpy(line, stock, len + 1);
+	i = 0;
+	while (i < len)
+	{
+		line[i] = stock[i];
+		i++;
+	}
+	line[i] = '\0';
 	return (line);
 }
 
@@ -117,57 +113,11 @@ t_fdlist	*get_fdnode(t_fdlist **lst, int fd)
 	return (curr);
 }
 
-void	remove_fdnode(t_fdlist **lst, int fd)
-{
-	t_fdlist	*curr;
-	t_fdlist	*prev;
-
-	curr = *lst;
-	prev = NULL;
-	while (curr)
-	{
-		if (curr->fd == fd)
-		{
-			if (prev)
-				prev->next = curr->next;
-			else
-				*lst = curr->next;
-			free(curr->stock);
-			free(curr);
-			return ;
-		}
-		prev = curr;
-		curr = curr->next;
-	}
-}
-
-static char	*gnl_handle_node(t_fdlist **lst, t_fdlist *node, int fd)
-{
-	char	*line;
-
-	node->stock = read_file(fd, node->stock);
-	if (!node->stock || !*node->stock)
-	{
-		remove_fdnode(lst, node->fd);
-		return (NULL);
-	}
-	line = ft_line(node->stock);
-	if (!line)
-	{
-		remove_fdnode(lst, node->fd);
-		return (NULL);
-	}
-	node->stock = ft_next(node->stock);
-	if (!node->stock)
-		remove_fdnode(lst, node->fd);
-	return (line);
-}
-
 char	*get_next_line(int fd)
 {
 	static t_fdlist	*lst;
 	t_fdlist		*node;
-	char			*ret;
+	char			*line;
 
 	if (fd < 0 || BUFFER_SIZE <= 0)
 		return (NULL);
@@ -175,10 +125,15 @@ char	*get_next_line(int fd)
 	if (!node)
 		return (NULL);
 	if (read(fd, NULL, 0) < 0)
-	{
+		return (remove_fdnode(&lst, fd), NULL);
+	node->stock = read_file(fd, node->stock);
+	if (!node->stock || !*node->stock)
+		return (remove_fdnode(&lst, fd), NULL);
+	line = ft_line(node->stock);
+	if (!line)
+		return (remove_fdnode(&lst, fd), NULL);
+	node->stock = ft_next(node->stock);
+	if (!node->stock)
 		remove_fdnode(&lst, fd);
-		return (NULL);
-	}
-	ret = gnl_handle_node(&lst, node, fd);
-	return (ret);
+	return (line);
 }
