@@ -1,24 +1,27 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   get_next_line.h                                    :+:      :+:    :+:   */
+/*   get_next_line_bonus.h                              :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: dbouizem <djihane.bouizem@gmail.com>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2025/05/17 01:42:55 by dbouizem          #+#    #+#             */
-/*   Updated: 2025/06/01 03:09:33 by dbouizem         ###   ########.fr       */
+/*   Created: 2025/05/30 03:10:59 by dbouizem          #+#    #+#             */
+/*   Updated: 2025/06/02 15:54:29 by dbouizem         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#ifndef GET_NEXT_LINE_H
-# define GET_NEXT_LINE_H
+#ifndef GET_NEXT_LINE_BONUS_H
+# define GET_NEXT_LINE_BONUS_H
 
-# include <stdlib.h>
 # include <unistd.h>
+# include <stdlib.h>
 
-# ifndef BUFFER_SIZE
-#  define BUFFER_SIZE 1024
-# endif
+typedef struct s_fdlist
+{
+	int				fd;
+	char			*stock;
+	struct s_fdlist	*next;
+}					t_fdlist;
 
 char	*get_next_line(int fd);
 
